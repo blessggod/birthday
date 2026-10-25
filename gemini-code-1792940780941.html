@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>✨ Мост тепла и любви из Валенсии — С Днём Рождения, Мама! ❤️</title>
+    
+    <!-- Open Graph для красивого превью в Telegram / Viber / WhatsApp -->
+    <meta property="og:title" content="✨ Секретная открытка из Валенсии — С Днём Рождения, Мама! ❤️">
+    <meta property="og:description" content="Нажми, чтобы открыть наш звёздный мост тепла и получить объятия сквозь километры 🌍💖">
+    <meta property="og:type" content="website">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Three.js + OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- Google Fonts: Cormorant Garamond (Haute Couture Serif), Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --gold-light: #fef08a;
+            --gold-mid: #f59e0b;
+            --rose-glow: #f43f5e;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            background-color: #020207;
+            color: #f8fafc;
+            overflow: hidden;
+            height: 100dvh;
+            width: 100vw;
+            user-select: none;
+            overscroll-behavior: none;
+        }
+
+        .font-display { font-family: var(--font-display); }
+        .font-mono-tech { font-family: var(--font-mono); }
+
+        /* Учёт безопасных зон экрана телефона (iPhone Notch / Home Bar) */
+        .safe-top {
+            padding-top: max(0.75rem, env(safe-area-inset-top));
+        }
+        .safe-bottom {
+            padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+        }
+
+        /* =====================================================
+           LUXURY CELESTIAL BACKDROP (БАРХАТНЫЙ КОСМОС + ЗОЛОТАЯ ПЫЛЬ)
+           ===================================================== */
+        .nebula-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 15% 18%, rgba(251, 191, 36, 0.16) 0%, transparent 45%),
+                radial-gradient(circle at 85% 22%, rgba(244, 63, 94, 0.16) 0%, transparent 50%),
+                radial-gradient(circle at 50% 78%, rgba(168, 85, 247, 0.14) 0%, transparent 55%),
+                radial-gradient(circle at 50% 42%, #13112c 0%, #070616 58%, #020206 100%);
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .nebula-aura {
+            position: absolute;
+            width: 150vw;
+            height: 150vw;
+            top: -25vw;
+            left: -25vw;
+            background: conic-gradient(
+                from 0deg at 50% 50%,
+                rgba(251, 191, 36, 0.08) 0deg,
+                rgba(244, 114, 182, 0.1) 120deg,
+                rgba(192, 132, 252, 0.07) 240deg,
+                rgba(251, 191, 36, 0.08) 360deg
+            );
+            filter: blur(85px);
+            animation: slowNebulaSpin 60s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Декоративные тонкие золотые орбиты на фоне (астролябия) */
+        .celestial-astrolabe {
+            position: fixed;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(92vw, 540px);
+            height: min(92vw, 540px);
+            border-radius: 9999px;
+            border: 1px dashed rgba(253, 224, 71, 0.12);
+            box-shadow: 0 0 90px rgba(244, 114, 182, 0.08), inset 0 0 60px rgba(251, 191, 36, 0.05);
+            pointer-events: none;
+            z-index: 1;
+            animation: astrolabeRotate 120s linear infinite;
+        }
+        .celestial-astrolabe::before {
+            content: '';
+            position: absolute;
+            inset: -24px;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        @keyframes astrolabeRotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes slowNebulaSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.07); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* 3D WebGL контейнер */
+        #globeContainer {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            cursor: grab;
+            touch-action: none;
+        }
+        #globeContainer:active {
+            cursor: grabbing;
+        }
+
+        /* Глубокая кинематографическая виньетка */
+        .cinema-vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 50% 42%, transparent 42%, rgba(3, 2, 10, 0.78) 100%),
+                linear-gradient(to bottom, rgba(2, 2, 8, 0.55) 0%, transparent 22%, transparent 72%, rgba(2, 2, 8, 0.85) 100%);
+        }
+
+        /* =====================================================
+           ЮВЕЛИРНЫЙ GLASSMORPHISM & ЖИДКОЕ ЗОЛОТО
+           ===================================================== */
+        .cosmic-glass {
+            background: linear-gradient(145deg, rgba(24, 20, 48, 0.72) 0%, rgba(11, 9, 26, 0.86) 100%) padding-box,
+                        linear-gradient(135deg, rgba(254, 240, 138, 0.45) 0%, rgba(244, 114, 182, 0.2) 50%, rgba(251, 191, 36, 0.35) 100%) border-box;
+            border: 1px solid transparent;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 
+                0 14px 36px -6px rgba(0, 0, 0, 0.65),
+                inset 0 1px 1px rgba(255, 255, 255, 0.22);
+        }
+
+        /* Центральная шкатулка-карточка для сообщений */
+        .cosmic-card-warm {
+            position: relative;
+            background: 
+                radial-gradient(circle at 50% 0%, rgba(251, 191, 36, 0.15) 0%, transparent 65%),
+                linear-gradient(145deg, rgba(22, 16, 44, 0.82) 0%, rgba(38, 13, 42, 0.8) 52%, rgba(16, 12, 36, 0.88) 100%) padding-box,
+                linear-gradient(135deg, rgba(254, 240, 138, 0.7) 0%, rgba(244, 114, 182, 0.45) 45%, rgba(255, 255, 255, 0.15) 75%, rgba(251, 191, 36, 0.65) 100%) border-box;
+            border: 1px solid transparent;
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            box-shadow: 
+                0 24px 55px -12px rgba(0, 0, 0, 0.85),
+                0 0 40px -8px rgba(244, 114, 182, 0.32),
+                inset 0 1px 2px rgba(255, 255, 255, 0.28);
+        }
+
+        /* Ювелирные уголки внутри карточки посланий */
+        .corner-ornament {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-color: rgba(253, 224, 71, 0.55);
+            pointer-events: none;
+        }
+        .corner-tl { top: 7px; left: 7px; border-top: 1.5px solid; border-left: 1.5px solid; border-top-left-radius: 4px; }
+        .corner-tr { top: 7px; right: 7px; border-top: 1.5px solid; border-right: 1.5px solid; border-top-right-radius: 4px; }
+        .corner-bl { bottom: 7px; left: 7px; border-bottom: 1.5px solid; border-left: 1.5px solid; border-bottom-left-radius: 4px; }
+        .corner-br { bottom: 7px; right: 7px; border-bottom: 1.5px solid; border-right: 1.5px solid; border-bottom-right-radius: 4px; }
+
+        /* Текст жидкого золота для главного заголовка */
+        .gold-couture-title {
+            background: linear-gradient(
+                110deg,
+                #fffbeb 0%,
+                #fde68a 22%,
+                #fbcfe8 48%,
+                #fef08a 72%,
+                #fffbeb 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 7s linear infinite;
+            filter: drop-shadow(0 4px 18px rgba(244, 114, 182, 0.38));
+        }
+
+        @keyframes shineText {
+            to { background-position: 200% center; }
+        }
+
+        /* Главная кнопка Haute Couture */
+        .warm-btn {
+            position: relative;
+            overflow: hidden;
+            background: 
+                linear-gradient(135deg, #d97706 0%, #e11d48 45%, #db2777 78%, #f59e0b 100%) padding-box,
+                linear-gradient(135deg, #fef08a 0%, #fbcfe8 50%, #fde68a 100%) border-box;
+            border: 1.5px solid transparent;
+            background-size: 220% 220%;
+            animation: gradientShift 6s ease infinite;
+            box-shadow: 
+                0 14px 35px -6px rgba(225, 29, 72, 0.65),
+                0 0 45px -8px rgba(245, 158, 11, 0.55),
+                inset 0 2px 5px rgba(255, 255, 255, 0.5),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.25);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .warm-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 42%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+            transform: rotate(25deg);
+            animation: buttonShimmer 3.8s infinite;
+            pointer-events: none;
+        }
+        @keyframes buttonShimmer {
+            0% { left: -60%; }
+            35%, 100% { left: 130%; }
+        }
+        .warm-btn:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* =====================================================
+           3D ЮВЕЛИРНЫЕ МАРКЕРЫ НА ПЛАНЕТЕ
+           ===================================================== */
+        .globe-pin {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 12;
+            transform: translate(-50%, -100%);
+            transition: opacity 0.25s ease;
+            will-change: transform, opacity;
+        }
+
+        .pin-badge-valencia {
+            background: linear-gradient(145deg, rgba(16, 22, 42, 0.92) 0%, rgba(8, 12, 26, 0.96) 100%) padding-box,
+                        linear-gradient(135deg, #fde68a 0%, rgba(251, 191, 36, 0.3) 100%) border-box;
+            border: 1px solid transparent;
+            box-shadow: 
+                0 8px 25px rgba(245, 158, 11, 0.42),
+                0 0 12px rgba(253, 224, 71, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+        }
+
+        .pin-badge-ukraine {
+            background: linear-gradient(145deg, rgba(58, 11, 38, 0.94) 0%, rgba(24, 10, 38, 0.97) 100%) padding-box,
+                        linear-gradient(135deg, #fef08a 0%, #f472b6 50%, #fbbf24 100%) border-box;
+            border: 1.5px solid transparent;
+            box-shadow: 
+                0 8px 30px rgba(244, 63, 94, 0.6),
+                0 0 22px rgba(251, 191, 36, 0.45),
+                inset 0 1px 1px rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
+        }
+
+        .pin-stem {
+            width: 1.5px;
+            height: 18px;
+            margin: 0 auto;
+            position: relative;
+        }
+        @media (min-width: 640px) {
+            .pin-stem { height: 24px; width: 2px; }
+        }
+        .pin-stem::after {
+            content: '';
+            position: absolute;
+            bottom: -3.5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #fffbeb;
+            border: 1.5px solid currentColor;
+            box-shadow: 0 0 12px currentColor, 0 0 20px currentColor;
+        }
+
+        /* Всплывающие сердечки над точкой Мамы */
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 18;
+            font-size: 1.25rem;
+            filter: drop-shadow(0 3px 10px rgba(244, 114, 182, 0.75));
+            animation: floatUpHeart 1.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes floatUpHeart {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.4);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(calc(-50% + var(--tx, 0px) * 0.3), -125%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--tx, 0px)), -290%) scale(0.85);
+            }
+        }
+
+        /* Анимация появления текста */
+        @keyframes warmReveal {
+            0% { opacity: 0; transform: translateY(6px) scale(0.98); filter: blur(3px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .animate-warm {
+            animation: warmReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Золотой VIP-купон */
+        .vip-coupon-card {
+            background: linear-gradient(135deg, rgba(30, 24, 54, 0.75) 0%, rgba(15, 12, 32, 0.88) 100%) padding-box,
+                        linear-gradient(135deg, rgba(254, 240, 138, 0.35), rgba(244, 114, 182, 0.25)) border-box;
+            border: 1px solid transparent;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+        .vip-coupon-active {
+            background: linear-gradient(135deg, rgba(76, 18, 48, 0.82) 0%, rgba(38, 14, 42, 0.9) 100%) padding-box,
+                        linear-gradient(135deg, #fef08a 0%, #f472b6 50%, #fbbf24 100%) border-box;
+            border: 1px solid transparent;
+            box-shadow: 0 10px 30px rgba(244, 63, 94, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); }
+        ::-webkit-scrollbar-thumb { background: rgba(251, 191, 36, 0.5); border-radius: 9999px; }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between h-[100dvh] w-screen overflow-hidden select-none">
+
+    <!-- ТЁПЛЫЙ КОСМИЧЕСКИЙ ФОН И ЗОЛОТАЯ АСТРОЛЯБИЯ -->
+    <div class="nebula-backdrop">
+        <div class="nebula-aura"></div>
+    </div>
+    <div class="celestial-astrolabe"></div>
+
+    <!-- 3D ГЛОБУС -->
+    <div id="globeContainer"></div>
+
+    <!-- КИНЕМАТОГРАФИЧЕСКАЯ ВИНЬЕТКА -->
+    <div class="cinema-vignette"></div>
+
+    <!-- КОНТЕЙНЕР ДЛЯ ВСПЛЫВАЮЩИХ СЕРДЕЧЕК НАД УКРАИНОЙ -->
+    <div id="floatingHeartsLayer" class="fixed inset-0 pointer-events-none z-20 overflow-hidden"></div>
+
+    <!-- 3D МАРКЕР 1: ВАЛЕНСИЯ (ИСПАНИЯ) -->
+    <div id="pinValencia" class="globe-pin">
+        <div class="pin-badge-valencia px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-2xl text-center">
+            <div class="flex items-center justify-center gap-1.5 text-[10px] sm:text-xs font-bold text-amber-100 whitespace-nowrap tracking-wide">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-400 shadow-[0_0_8px_#fbbf24]"></span>
+                </span>
+                <span>🇪🇸 Валенсия</span>
+            </div>
+            <div id="pinSonName" class="text-[8.5px] sm:text-[10px] text-amber-200/90 font-medium leading-tight mt-0.5">Сын (Максим)</div>
+        </div>
+        <div class="pin-stem bg-gradient-to-b from-amber-300 via-amber-400/50 to-transparent text-amber-300"></div>
+    </div>
+
+    <!-- 3D МАРКЕР 2: УКРАИНА (МАМА) -->
+    <div id="pinUkraine" class="globe-pin">
+        <div id="momPinBox" class="pin-badge-ukraine px-3 py-1 sm:px-4 sm:py-1.5 rounded-2xl text-center transition-transform duration-500">
+            <div class="flex items-center justify-center gap-1.5 text-[10.5px] sm:text-xs font-bold text-amber-50 whitespace-nowrap tracking-wide">
+                <span class="text-xs animate-pulse drop-shadow-[0_0_6px_#f472b6]">👑</span>
+                <span id="pinUkraineCity">🇺🇦 Украина</span>
+            </div>
+            <div class="text-[8.5px] sm:text-[10px] text-amber-200 font-semibold leading-tight mt-0.5 tracking-wide">Любимая Мамочка ✨</div>
+        </div>
+        <div class="pin-stem bg-gradient-to-b from-pink-400 via-amber-300/60 to-transparent text-pink-400"></div>
+    </div>
+
+    <!-- =====================================================
+         ВЕРХНЯЯ ЮВЕЛИРНАЯ ПАНЕЛЬ (SAFE-TOP MOBILE)
+         ===================================================== -->
+    <header class="relative z-20 w-full max-w-xl mx-auto safe-top px-3.5 sm:px-5 flex flex-col gap-1.5 pointer-events-none">
+        <div class="flex items-center justify-between gap-1.5 pointer-events-auto">
+            <!-- Кнопка звука -->
+            <button id="soundBtn" onclick="toggleSound()" 
+                class="cosmic-glass h-8 px-3 rounded-full flex items-center gap-1.5 text-[11px] sm:text-xs font-medium text-amber-100 hover:brightness-110 active:scale-95 transition-all">
+                <span id="soundIcon" class="text-xs">🔊</span>
+                <span id="soundText" class="hidden sm:inline tracking-wide">Мелодия тепла</span>
+            </button>
+
+            <!-- Ювелирная капсула расстояния (двойной тап открывает настройки) -->
+            <div ondblclick="openModal('settingsModal')" 
+                class="cosmic-glass h-8 px-3.5 rounded-full flex items-center gap-1.5 text-[10px] sm:text-xs text-amber-100 cursor-pointer shadow-lg"
+                title="Нить любви Валенсия — Украина">
+                <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse shadow-[0_0_10px_#fde047]"></span>
+                <span class="text-amber-200/75 font-medium">Нить любви:</span>
+                <strong id="hudDistance" class="text-white font-semibold tracking-wide">2 860 км</strong>
+                <span class="text-pink-300">• В сердце рядом ❤️</span>
+            </div>
+
+            <!-- Центрирование и настройки -->
+            <div class="flex items-center gap-1.5">
+                <button onclick="focusCameraOnEurope(false)" 
+                    class="cosmic-glass w-8 h-8 rounded-full flex items-center justify-center text-xs text-amber-100 hover:text-white active:scale-95 transition-all"
+                    title="Показать маршрут целиком">
+                    🌍
+                </button>
+                <button id="settingsBtn" onclick="openModal('settingsModal')" 
+                    class="cosmic-glass w-8 h-8 rounded-full flex items-center justify-center text-xs text-amber-100 hover:text-white active:scale-95 transition-all"
+                    title="Настроить город в Украине и ссылку">
+                    ⚙️
+                </button>
+            </div>
+        </div>
+
+        <!-- Праздничный заголовок с эффектом жидкого золота -->
+        <div class="text-center pointer-events-none mt-1">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-300/20 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-amber-200/90 mb-0.5">
+                <span>✦</span>
+                <span>Праздничное послание через континент</span>
+                <span>✦</span>
+            </div>
+            <h1 class="font-display italic text-[24px] sm:text-[40px] font-bold tracking-wide gold-couture-title leading-none py-0.5">
+                С Днём Рождения, родная Мамочка!
+            </h1>
+            <p id="subtitleLine" class="text-[10.5px] sm:text-xs text-amber-100/80 tracking-wider font-medium mt-0.5">
+                Из солнечной Валенсии в родную Украину с бесконечной любовью
+            </p>
+        </div>
+    </header>
+
+    <!-- Ненавязчивая подсказка вращения глобуса (исчезает при первом касании) -->
+    <div id="touchHint" class="relative z-10 pointer-events-none flex-1 flex items-start justify-center pt-1.5 transition-opacity duration-500">
+        <div class="px-3.5 py-1 rounded-full bg-slate-950/50 border border-amber-200/15 text-[10px] text-amber-100/80 backdrop-blur-md shadow-inner flex items-center gap-1.5">
+            <span>✨</span>
+            <span>Планету можно крутить и приближать пальцем</span>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         НИЖНЯЯ ПАНЕЛЬ (ЮВЕЛИРНАЯ КОМПОНОВКА ДЛЯ СМАРТФОНА)
+         ===================================================== -->
+    <section class="relative z-20 w-full max-w-md mx-auto safe-bottom px-3.5 sm:px-5 flex flex-col gap-2 pointer-events-auto">
+        
+        <!-- Счётчик объятий + быстрый выбор города -->
+        <div class="flex items-center justify-between gap-2 px-0.5">
+            <div class="cosmic-glass px-3.5 py-1 rounded-full flex items-center gap-1.5">
+                <span class="text-xs animate-pulse">🤗</span>
+                <span class="text-[11px] text-amber-100/90 font-medium">Доставлено объятий:</span>
+                <span id="hugCounter" class="font-mono-tech text-xs sm:text-sm font-bold text-amber-300 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">0</span>
+            </div>
+
+            <button onclick="openModal('settingsModal')" id="cityQuickBadge"
+                class="cosmic-glass px-3 py-1 rounded-full text-[11px] text-amber-100 hover:brightness-110 active:scale-95 transition-all flex items-center gap-1 font-medium">
+                <span class="text-pink-400">📍</span>
+                <span id="quickCityLabel">Украина</span>
+            </button>
+        </div>
+
+        <!-- Ювелирная карточка с тёплыми словами -->
+        <div id="holoCard" class="cosmic-card-warm rounded-2xl px-4 py-3 sm:p-4 min-h-[82px] sm:min-h-[96px] flex flex-col justify-center text-center relative overflow-hidden">
+            <!-- Золотые филигранные уголки -->
+            <div class="corner-ornament corner-tl"></div>
+            <div class="corner-ornament corner-tr"></div>
+            <div class="corner-ornament corner-bl"></div>
+            <div class="corner-ornament corner-br"></div>
+
+            <div class="flex items-center justify-center gap-1.5 text-[8.5px] sm:text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-200/90 mb-1">
+                <span class="text-amber-300">✦</span>
+                <span id="messageBadge">ЗОЛОТОЙ МОСТ ЛЮБВИ • ВАЛЕНСИЯ ➔ УКРАИНА</span>
+                <span class="text-amber-300">✦</span>
+            </div>
+            <p id="warmMessageText" class="font-display italic text-[17px] sm:text-[21px] font-semibold text-amber-50 leading-snug animate-warm drop-shadow-sm">
+                Мамуль, нажми на кнопку ниже — и из Валенсии прямо к тебе домой полетит тёплый лучик моей любви и нежных объятий! ❤️
+            </p>
+        </div>
+
+        <!-- Главная кнопка отправки лучика тепла (Haute Couture Button) -->
+        <button id="launchHugBtn" onclick="launchCosmicHug()" 
+            class="warm-btn w-full py-3.5 sm:py-4 px-5 rounded-2xl font-bold text-sm sm:text-base text-white flex items-center justify-center gap-2.5 cursor-pointer tracking-wide">
+            <span class="text-lg drop-shadow">✨</span>
+            <span class="drop-shadow-sm tracking-wide">Отправить лучик тепла и объятий</span>
+            <span class="text-lg drop-shadow">💖</span>
+        </button>
+
+        <!-- Кнопки: Письмо от сына + Подарочные купоны -->
+        <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="openModal('letterModal')" 
+                class="cosmic-glass hover:brightness-110 active:scale-95 transition-all py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2.5 group">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400/25 to-pink-500/20 border border-amber-300/35 flex items-center justify-center text-base shadow-inner group-hover:scale-105 transition-transform">
+                    💌
+                </div>
+                <div class="text-left">
+                    <div class="text-[11.5px] sm:text-xs font-bold text-amber-100 leading-tight">Письмо Маме</div>
+                    <div class="text-[9.5px] text-amber-200/70 leading-tight mt-0.5">Лично от сына</div>
+                </div>
+            </button>
+
+            <button onclick="openModal('couponsModal')" 
+                class="cosmic-glass hover:brightness-110 active:scale-95 transition-all py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2.5 group">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-pink-400/25 to-amber-500/20 border border-pink-300/35 flex items-center justify-center text-base shadow-inner group-hover:scale-105 transition-transform">
+                    🎟️
+                </div>
+                <div class="text-left">
+                    <div class="text-[11.5px] sm:text-xs font-bold text-pink-100 leading-tight">VIP-Купоны</div>
+                    <div class="text-[9.5px] text-pink-200/70 leading-tight mt-0.5">Подарки при встрече</div>
+                </div>
+            </button>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         МОДАЛЬНОЕ ОКНО 1: КОРОЛЕВСКОЕ ПИСЬМО ДЛЯ МАМЫ
+         ===================================================== -->
+    <div id="letterModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3.5 sm:p-4 bg-black/80 backdrop-blur-xl">
+        <div class="cosmic-card-warm w-full max-w-md rounded-3xl p-5 sm:p-6 shadow-2xl relative max-h-[86dvh] flex flex-col animate-warm">
+            <div class="corner-ornament corner-tl"></div>
+            <div class="corner-ornament corner-tr"></div>
+            <div class="corner-ornament corner-bl"></div>
+            <div class="corner-ornament corner-br"></div>
+
+            <button onclick="closeModal('letterModal')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-amber-100 text-sm transition-all">
+                ✕
+            </button>
+
+            <div class="text-center mb-3.5">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-amber-400/25 via-pink-500/25 to-amber-500/25 border border-amber-300/50 text-2xl mb-1.5 shadow-[0_0_25px_rgba(251,191,36,0.35)]">
+                    👑
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold gold-couture-title font-display italic">Родная моя Мамочка!</h2>
+                <p class="text-[9.5px] text-amber-200/80 mt-0.5 tracking-[0.2em] uppercase font-semibold">
+                    ✦ Из Валенсии 🇪🇸 в твоё сердце 🇺🇦 ✦
+                </p>
+            </div>
+
+            <div id="letterBody" class="overflow-y-auto pr-1.5 space-y-3 text-[13px] sm:text-sm text-amber-50/95 leading-relaxed font-normal bg-black/25 p-3.5 rounded-2xl border border-amber-200/10 shadow-inner">
+                <!-- Заполняется из JS -->
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-amber-200/15 flex items-center justify-between gap-2">
+                <div class="text-xs text-amber-200/90 font-display italic text-base">
+                    Люблю и обнимаю, твой <strong id="letterSonName" class="text-white not-italic font-sans text-xs font-bold">Максим</strong> ❤️
+                </div>
+                <button onclick="closeModal('letterModal'); launchCosmicHug();" 
+                    class="px-4 py-2 rounded-xl warm-btn text-white text-xs font-bold shadow-lg active:scale-95 transition-all">
+                    Отправить тепло ✨
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         МОДАЛЬНОЕ ОКНО 2: ЗОЛОТЫЕ VIP-КУПОНЫ ДЛЯ МАМЫ
+         ===================================================== -->
+    <div id="couponsModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3.5 sm:p-4 bg-black/80 backdrop-blur-xl">
+        <div class="cosmic-card-warm w-full max-w-md rounded-3xl p-5 sm:p-6 shadow-2xl relative max-h-[86dvh] flex flex-col animate-warm">
+            <div class="corner-ornament corner-tl"></div>
+            <div class="corner-ornament corner-tr"></div>
+            <div class="corner-ornament corner-bl"></div>
+            <div class="corner-ornament corner-br"></div>
+
+            <button onclick="closeModal('couponsModal')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-amber-100 text-sm transition-all">
+                ✕
+            </button>
+
+            <div class="text-center mb-3.5">
+                <div class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-gradient-to-br from-amber-400/20 to-pink-500/25 border border-amber-300/45 text-xl mb-1 shadow-[0_0_20px_rgba(244,114,182,0.35)]">
+                    🎟️
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold gold-couture-title font-display italic">Золотые сертификаты Мамы</h2>
+                <p class="text-[11px] text-amber-100/80 mt-0.5">Нажми на любой сертификат, чтобы поставить печать активации ✨</p>
+            </div>
+
+            <div id="couponsContainer" class="overflow-y-auto space-y-2.5 pr-1">
+                <!-- Заполняется из JS -->
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-amber-200/15">
+                <button onclick="closeModal('couponsModal')" class="w-full py-2.5 rounded-xl cosmic-glass hover:brightness-110 text-xs font-semibold text-amber-100 transition-all">
+                    Вернуться к нашей планете 🌍
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         МОДАЛЬНОЕ ОКНО 3: НАСТРОЙКА ГОРОДА И ГЕНЕРАЦИЯ ССЫЛКИ
+         ===================================================== -->
+    <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3.5 sm:p-4 bg-black/85 backdrop-blur-xl">
+        <div class="cosmic-card-warm w-full max-w-md rounded-3xl p-5 sm:p-6 shadow-2xl relative max-h-[88dvh] flex flex-col animate-warm">
+            <button onclick="closeModal('settingsModal')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-sm">
+                ✕
+            </button>
+
+            <div class="mb-3">
+                <h2 class="text-base sm:text-lg font-bold text-amber-200 flex items-center gap-2">
+                    <span>⚙️</span> Персональная настройка подарка
+                </h2>
+                <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                    Выбери город мамы в Украине. При нажатии на кнопку внизу скопируется ссылка для мамы, в которой <strong>значок настроек будет автоматически скрыт</strong>!
+                </p>
+            </div>
+
+            <div class="overflow-y-auto space-y-3 pr-1 text-xs">
+                <div>
+                    <label class="block text-amber-200 mb-1 font-semibold">Город мамы в Украине:</label>
+                    <select id="selectUkraineCity" onchange="onCityPresetChange()" 
+                        class="w-full px-3 py-2.5 rounded-xl bg-slate-950/90 border border-amber-300/30 text-white focus:outline-none focus:border-amber-400">
+                        <option value="Украина|49.00|31.40">🇺🇦 Украина (Центр)</option>
+                        <option value="Киев|50.4501|30.5234">🇺🇦 Киев</option>
+                        <option value="Днепр|48.4647|35.0462">🇺🇦 Днепр</option>
+                        <option value="Харьков|49.9935|36.2304">🇺🇦 Харьков</option>
+                        <option value="Одесса|46.4825|30.7233">🇺🇦 Одесса</option>
+                        <option value="Львов|49.8397|24.0297">🇺🇦 Львов</option>
+                        <option value="Запорожье|47.8388|35.1396">🇺🇦 Запорожье</option>
+                        <option value="Винница|49.2331|28.4682">🇺🇦 Винница</option>
+                        <option value="Полтава|49.5883|34.5514">🇺🇦 Полтава</option>
+                        <option value="Кривой Рог|47.9105|33.3918">🇺🇦 Кривой Рог</option>
+                        <option value="Николаев|46.9750|31.9946">🇺🇦 Николаев</option>
+                        <option value="Черкассы|49.4444|32.0598">🇺🇦 Черкассы</option>
+                        <option value="Чернигов|51.4982|31.2893">🇺🇦 Чернигов</option>
+                        <option value="Сумы|50.9077|34.7981">🇺🇦 Сумы</option>
+                        <option value="Житомир|50.2547|28.6587">🇺🇦 Житомир</option>
+                        <option value="Хмельницкий|49.4230|26.9871">🇺🇦 Хмельницкий</option>
+                        <option value="Черновцы|48.2921|25.9358">🇺🇦 Черновцы</option>
+                        <option value="Ровно|50.6199|26.2516">🇺🇦 Ровно</option>
+                        <option value="Ивано-Франковск|48.9226|24.7111">🇺🇦 Ивано-Франковск</option>
+                        <option value="Тернополь|49.5535|25.5948">🇺🇦 Тернополь</option>
+                        <option value="Луцк|50.7472|25.3254">🇺🇦 Луцк</option>
+                        <option value="Ужгород|48.6208|22.2879">🇺🇦 Ужгород</option>
+                        <option value="Кропивницкий|48.5079|32.2623">🇺🇦 Кропивницкий</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-slate-300 mb-1 font-medium">Подпись города:</label>
+                        <input id="inputCityName" type="text" placeholder="Украина" 
+                            class="w-full px-3 py-2 rounded-xl bg-slate-950/90 border border-amber-300/25 text-white focus:outline-none focus:border-amber-400">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 mb-1 font-medium">Твоё имя:</label>
+                        <input id="inputSonName" type="text" placeholder="Максим" 
+                            class="w-full px-3 py-2 rounded-xl bg-slate-950/90 border border-amber-300/25 text-white focus:outline-none focus:border-amber-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 mb-1 font-medium">Текст письма для мамы:</label>
+                    <textarea id="inputLetter" rows="4" 
+                        class="w-full px-3 py-2 rounded-xl bg-slate-950/90 border border-amber-300/25 text-white focus:outline-none focus:border-amber-400 leading-relaxed"></textarea>
+                </div>
+
+                <div id="generatedLinkBox" class="hidden p-2.5 rounded-xl bg-emerald-950/50 border border-emerald-400/40">
+                    <div class="text-[10px] text-emerald-300 font-semibold mb-1">Готовая персональная ссылка для мамы:</div>
+                    <input id="generatedUrlInput" type="text" readonly 
+                        class="w-full px-2 py-1 rounded bg-slate-950/90 text-[10px] font-mono-tech text-emerald-200 border border-white/10">
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-amber-200/15">
+                <button onclick="saveSettingsAndCopyLink()" 
+                    class="w-full py-3.5 rounded-xl warm-btn text-white font-bold text-xs sm:text-sm shadow-lg transition-all flex items-center justify-center gap-2">
+                    <span>🔗</span>
+                    <span id="copyLinkBtnText">Сохранить и скопировать ссылку для Мамы</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =====================================================================
+           1. КООРДИНАТЫ И ТЕКСТЫ (ВАЛЕНСИЯ ➔ УКРАИНА) — БЕЗ ИЗМЕНЕНИЙ МЕХАНИКИ
+           ===================================================================== */
+        const VALENCIA_COORDS = {
+            name: "Валенсия",
+            lat: 39.4699,
+            lng: -0.3763
+        };
+
+        let appConfig = {
+            ukraineCity: "Украина",
+            ukraineLat: 49.0000,
+            ukraineLng: 31.4000,
+            sonName: "Максим",
+            letter: `Родная моя мамочка, с Днём рождения тебя! 🌍❤️\n\nСейчас я в Валенсии, а ты в Украине — между нами почти три тысячи километров, страны и границы. Но если посмотреть на нашу планету сверху, то видно, что мы совсем рядом, под одним и тем же звёздным небом.\n\nСпасибо тебе за твою бесконечную любовь, за наши тёплые и долгие разговоры по телефону, за твою заботу и поддержку, которую я чувствую каждую секунду даже здесь, в Испании. Никакие средиземноморские блюда никогда не сравнятся с твоей домашней едой и уютом родного дома!\n\nЖелаю тебе самого крепкого здоровья, спокойствия на сердце, душевного тепла и сияющих от радости глаз. Я очень сильно тебя люблю, скучаю и мечтаю поскорее крепко-крепко тебя обнять!`
+        };
+
+        const warmMessages = [
+            "Из солнечной Валенсии прямо в твоё сердце! С Днём рождения, моя самая лучшая мама на свете! 🌍❤️",
+            "Между Испанией и Украиной тысячи километров, но для моей любви к тебе не существует границ ✨",
+            "Спасибо за каждый наш разговор по телефону — твой родной голос согревает меня за тысячи километров 📞💖",
+            "Официально заявляю из Валенсии: ни одна испанская кухня в мире не сравнится с тем, как вкусно готовишь ты! 🍲😋",
+            "Каждый золотой лучик на этом глобусе — это моё крепкое, нежное и тёплое объятие для тебя 🤗✨",
+            "Желаю тебе самого крепкого здоровья, тишины, душевного покоя, уюта и только добрых вестей каждый день 🕊️🌸",
+            "Спасибо, что всегда верила в меня и поддерживала, куда бы меня ни занесла жизнь 🌟",
+            "Когда мы наконец встретимся, я обниму тебя так крепко, что не отпущу целый вечер! ❤️",
+            "Ты — мой главный маяк тепла, доброты и дома на всей этой планете. Очень горжусь, что я твой сын! 💐",
+            "Пусть твои глаза всегда сияют теплом ярче всех ночных огней Европы и звёзд на небе ✨",
+            "Расстояние от Валенсии до Украины — это просто цифры на карте. В мыслях я сегодня сижу рядом с тобой за праздничным столом 🎂🥂",
+            "Спасибо за самое счастливое детство, твоё терпение, мудрость и золотое сердце 🏡💛",
+            "Посылаю тебе лучик испанского солнца и средиземноморского тепла прямо в твои ладони! ☀️🌊",
+            "Береги себя, мамуль, отдыхай побольше и обязательно порадуй себя сегодня чем-нибудь приятным! 🌷🍰",
+            "С твоим днём, родная! Улыбнись прямо сейчас — я чувствую твою улыбку даже через всю Европу 😊❤️"
+        ];
+
+        const couponsData = [
+            {
+                id: "c1",
+                icon: "🤗",
+                title: "1 000 крепких объятий при встрече",
+                desc: "Выплачивается в первую же минуту, как только мы увидимся вживую!"
+            },
+            {
+                id: "c2",
+                icon: "📞",
+                title: "Безлимитные душевные разговоры 24/7",
+                desc: "Звонок в любое время дня и ночи — я всегда на связи для тебя."
+            },
+            {
+                id: "c3",
+                icon: "🇪🇸",
+                title: "Прогулка по солнечной Валенсии вместе",
+                desc: "Сертификат на то, что я обязательно покажу тебе море, пальмы и самые красивые места!"
+            },
+            {
+                id: "c4",
+                icon: "🍰",
+                title: "Праздничный ужин в любимом месте",
+                desc: "Когда мы встретимся, идём праздновать и заказываем всё, что ты захочешь!"
+            },
+            {
+                id: "c5",
+                icon: "👑",
+                title: "Исполнение любого маминого желания",
+                desc: "Королевский золотой сертификат без срока давности. Просто напомни мне о нём!"
+            }
+        ];
+
+        let hugCount = parseInt(localStorage.getItem('cosmic_mom_hugs') || '0', 10);
+        let msgIndex = 0;
+        let redeemedCoupons = JSON.parse(localStorage.getItem('cosmic_mom_coupons') || '{}');
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        function calculateHaversineKm(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return Math.round(R * c);
+        }
+
+        function loadConfigFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('city')) appConfig.ukraineCity = params.get('city');
+            if (params.get('lat')) appConfig.ukraineLat = parseFloat(params.get('lat'));
+            if (params.get('lng')) appConfig.ukraineLng = parseFloat(params.get('lng'));
+            if (params.get('name')) appConfig.sonName = params.get('name');
+            if (params.get('letter')) appConfig.letter = params.get('letter');
+
+            if (params.get('gift') === '1') {
+                const sBtn = document.getElementById('settingsBtn');
+                if (sBtn) sBtn.classList.add('hidden');
+                const quickBadge = document.getElementById('cityQuickBadge');
+                if (quickBadge) quickBadge.onclick = () => focusCameraOnEurope(false);
+            }
+
+            updateUIWithConfig();
+        }
+
+        function updateUIWithConfig() {
+            const distKm = calculateHaversineKm(
+                VALENCIA_COORDS.lat, VALENCIA_COORDS.lng,
+                appConfig.ukraineLat, appConfig.ukraineLng
+            );
+            const formattedKm = distKm.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+            document.getElementById('hudDistance').textContent = `${formattedKm} км`;
+            document.getElementById('pinUkraineCity').textContent = `🇺🇦 ${appConfig.ukraineCity}`;
+            document.getElementById('quickCityLabel').textContent = `${appConfig.ukraineCity} (${formattedKm} км)`;
+            document.getElementById('pinSonName').textContent = `Сын (${appConfig.sonName})`;
+            document.getElementById('letterSonName').textContent = appConfig.sonName;
+            document.getElementById('hugCounter').textContent = hugCount;
+
+            document.getElementById('subtitleLine').textContent = 
+                `Валенсия 🇪🇸 ➔ ${appConfig.ukraineCity} 🇺🇦 • С бесконечной любовью от ${appConfig.sonName}`;
+
+            const letterBody = document.getElementById('letterBody');
+            letterBody.innerHTML = '';
+            appConfig.letter.split('\n').forEach(pText => {
+                if (pText.trim()) {
+                    const p = document.createElement('p');
+                    p.textContent = pText;
+                    letterBody.appendChild(p);
+                }
+            });
+
+            document.getElementById('inputCityName').value = appConfig.ukraineCity;
+            document.getElementById('inputSonName').value = appConfig.sonName;
+            document.getElementById('inputLetter').value = appConfig.letter;
+        }
+
+        /* =====================================================================
+           2. СИНТЕЗАТОР АРФЫ
+           ===================================================================== */
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playWarmSendShimmer() {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const notes = [440, 554.37, 659.25];
+                notes.forEach((freq, idx) => {
+                    const now = audioCtx.currentTime + idx * 0.07;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.045, now + 0.04);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.7);
+                });
+            } catch (e) {}
+        }
+
+        function playWarmArrivalChord() {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const freqs = [523.25, 659.25, 783.99, 987.77, 1174.66];
+                freqs.forEach((f, idx) => {
+                    const now = audioCtx.currentTime + idx * 0.065;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, now);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.055, now + 0.04);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 1.45);
+                });
+            } catch (e) {}
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
+            document.getElementById('soundText').textContent = soundEnabled ? 'Мелодия тепла' : 'Без звука';
+            if (soundEnabled) playWarmSendShimmer();
+        }
+
+        /* =====================================================================
+           3. THREE.JS 3D ГЛОБУС ЗЕМЛИ И ЗОЛОТОЙ МОСТ ЛЮБВИ
+           ===================================================================== */
+        const GLOBE_RADIUS = 100;
+        let scene, camera, renderer, controls, earthGroup, cloudsMesh, orbitalRingGroup;
+        let valenciaVec3 = new THREE.Vector3();
+        let ukraineVec3 = new THREE.Vector3();
+        let routeArcGroup = null;
+        let ukraineMarkerGroup = null;
+        let valenciaRingMesh = null;
+        let ukraineRingMesh = null;
+        let bridgeStreamParticles = [];
+        let activeBridgeCurve = null;
+
+        let activeWarmBeams = [];
+        let activeWarmRipples = [];
+
+        function latLngToVector3(lat, lng, radius = GLOBE_RADIUS) {
+            const phi = (90 - lat) * (Math.PI / 180);
+            const theta = (lng + 180) * (Math.PI / 180);
+            const x = -(radius * Math.sin(phi) * Math.cos(theta));
+            const z = (radius * Math.sin(phi) * Math.sin(theta));
+            const y = (radius * Math.cos(phi));
+            return new THREE.Vector3(x, y, z);
+        }
+
+        function createProceduralEarthTexture() {
+            const c = document.createElement('canvas');
+            c.width = 1024;
+            c.height = 512;
+            const ctx = c.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 0, 512);
+            grad.addColorStop(0, '#04071a');
+            grad.addColorStop(0.5, '#0c1838');
+            grad.addColorStop(1, '#04071a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 1024, 512);
+
+            return new THREE.CanvasTexture(c);
+        }
+
+        function createProceduralCloudsTexture() {
+            const c = document.createElement('canvas');
+            c.width = 512;
+            c.height = 256;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, 512, 256);
+
+            for (let i = 0; i < 140; i++) {
+                const x = Math.random() * 512;
+                const y = 30 + Math.random() * 196;
+                const r = 12 + Math.random() * 34;
+                const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+                g.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+                g.addColorStop(0.5, 'rgba(254, 243, 199, 0.06)');
+                g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.ellipse(x, y, r * 1.8, r * 0.7, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            return new THREE.CanvasTexture(c);
+        }
+
+        function createGlowSpriteTexture() {
+            const c = document.createElement('canvas');
+            c.width = 64;
+            c.height = 64;
+            const ctx = c.getContext('2d');
+            const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            g.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            g.addColorStop(0.3, 'rgba(254, 240, 138, 0.95)');
+            g.addColorStop(0.65, 'rgba(244, 114, 182, 0.6)');
+            g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, 64, 64);
+            return new THREE.CanvasTexture(c);
+        }
+
+        const particleGlowTexture = createGlowSpriteTexture();
+
+        function initThreeGlobe() {
+            const container = document.getElementById('globeContainer');
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(40, w / h, 1, 2500);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            container.appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.06;
+            controls.enablePan = false;
+            controls.minDistance = 148;
+            controls.maxDistance = 350;
+            controls.rotateSpeed = 0.6;
+            controls.zoomSpeed = 0.8;
+
+            controls.addEventListener('start', () => {
+                const hint = document.getElementById('touchHint');
+                if (hint) hint.style.opacity = '0';
+            });
+
+            const ambientLight = new THREE.AmbientLight(0xc7d2fe, 1.55);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xfef08a, 1.85);
+            sunLight.position.set(190, 140, 150);
+            scene.add(sunLight);
+
+            const roseRimLight = new THREE.PointLight(0xf43f5e, 1.5, 550);
+            roseRimLight.position.set(-170, 110, -150);
+            scene.add(roseRimLight);
+
+            earthGroup = new THREE.Group();
+            scene.add(earthGroup);
+
+            const earthGeo = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
+            const fallbackTex = createProceduralEarthTexture();
+
+            const earthMat = new THREE.MeshPhongMaterial({
+                map: fallbackTex,
+                color: 0xffffff,
+                emissive: 0x0d152c,
+                specular: new THREE.Color(0x312e81),
+                shininess: 24
+            });
+
+            const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+            earthGroup.add(earthMesh);
+
+            const loader = new THREE.TextureLoader();
+            loader.setCrossOrigin('anonymous');
+
+            loader.load(
+                'https://unpkg.com/three-globe@2.31.0/example/img/earth-night.jpg',
+                (nightTex) => {
+                    earthMat.map = nightTex;
+                    earthMat.emissiveMap = nightTex;
+                    earthMat.emissive = new THREE.Color(0xffe0a3);
+                    earthMat.emissiveIntensity = 1.02;
+                    earthMat.needsUpdate = true;
+                },
+                undefined,
+                () => {
+                    loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg', (bmTex) => {
+                        earthMat.map = bmTex;
+                        earthMat.needsUpdate = true;
+                    });
+                }
+            );
+
+            loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-topology.png', (bumpTex) => {
+                earthMat.bumpMap = bumpTex;
+                earthMat.bumpScale = 1.7;
+                earthMat.needsUpdate = true;
+            });
+
+            const cloudsGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.012, 48, 48);
+            const cloudsMat = new THREE.MeshLambertMaterial({
+                map: createProceduralCloudsTexture(),
+                transparent: true,
+                opacity: 0.4,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
+            earthGroup.add(cloudsMesh);
+
+            // Двойная королевская золотисто-розовая атмосфера вокруг планеты
+            const atmosGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.14, 64, 64);
+            const atmosMat = new THREE.ShaderMaterial({
+                vertexShader: `
+                    varying vec3 vNormal;
+                    void main() {
+                        vNormal = normalize(normalMatrix * normal);
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vNormal;
+                    void main() {
+                        float rim = 0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0));
+                        float intensity = pow(max(0.0, rim), 2.5);
+                        vec3 warmGold = vec3(0.99, 0.82, 0.38);
+                        vec3 softRose = vec3(0.96, 0.38, 0.68);
+                        vec3 col = mix(warmGold, softRose, clamp(vNormal.y * 0.5 + 0.5, 0.0, 1.0));
+                        gl_FragColor = vec4(col, 1.0) * intensity * 1.45;
+                    }
+                `,
+                blending: THREE.AdditiveBlending,
+                side: THREE.BackSide,
+                transparent: true,
+                depthWrite: false
+            });
+            const atmosphereMesh = new THREE.Mesh(atmosGeo, atmosMat);
+            earthGroup.add(atmosphereMesh);
+
+            createOrbitalCelestialBelt();
+            createStarfield();
+            buildLocationsAndArc();
+            focusCameraOnEurope(true);
+        }
+
+        function createOrbitalCelestialBelt() {
+            orbitalRingGroup = new THREE.Group();
+            orbitalRingGroup.rotation.x = Math.PI * 0.38;
+            orbitalRingGroup.rotation.z = -Math.PI * 0.12;
+
+            const ringGeo = new THREE.RingGeometry(GLOBE_RADIUS * 1.33, GLOBE_RADIUS * 1.342, 128);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0xfef08a,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.16,
+                blending: THREE.AdditiveBlending
+            });
+            orbitalRingGroup.add(new THREE.Mesh(ringGeo, ringMat));
+
+            const dustCount = 260;
+            const dustGeo = new THREE.BufferGeometry();
+            const pos = new Float32Array(dustCount * 3);
+            for (let i = 0; i < dustCount; i++) {
+                const angle = (i / dustCount) * Math.PI * 2;
+                const r = GLOBE_RADIUS * (1.26 + Math.random() * 0.2);
+                pos[i * 3] = Math.cos(angle) * r;
+                pos[i * 3 + 1] = Math.sin(angle) * r;
+                pos[i * 3 + 2] = (Math.random() - 0.5) * 6;
+            }
+            dustGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const dustMat = new THREE.PointsMaterial({
+                color: 0xfef08a,
+                size: 1.6,
+                transparent: true,
+                opacity: 0.48,
+                blending: THREE.AdditiveBlending
+            });
+            orbitalRingGroup.add(new THREE.Points(dustGeo, dustMat));
+
+            scene.add(orbitalRingGroup);
+        }
+
+        function createStarfield() {
+            const starsGeo = new THREE.BufferGeometry();
+            const count = 2400;
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            const palette = [
+                new THREE.Color(0xffffff),
+                new THREE.Color(0xfef08a),
+                new THREE.Color(0xfbcfe8),
+                new THREE.Color(0xfde68a)
+            ];
+
+            for (let i = 0; i < count; i++) {
+                const r = 450 + Math.random() * 900;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+
+                positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = r * Math.cos(phi);
+
+                const c = palette[Math.floor(Math.random() * palette.length)];
+                colors[i * 3] = c.r;
+                colors[i * 3 + 1] = c.g;
+                colors[i * 3 + 2] = c.b;
+            }
+
+            starsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            starsGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const starsMat = new THREE.PointsMaterial({
+                size: 2.2,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9
+            });
+
+            scene.add(new THREE.Points(starsGeo, starsMat));
+        }
+
+        function buildLocationsAndArc() {
+            if (routeArcGroup) earthGroup.remove(routeArcGroup);
+            if (ukraineMarkerGroup) earthGroup.remove(ukraineMarkerGroup);
+            bridgeStreamParticles = [];
+
+            valenciaVec3 = latLngToVector3(VALENCIA_COORDS.lat, VALENCIA_COORDS.lng, GLOBE_RADIUS + 0.5);
+            ukraineVec3 = latLngToVector3(appConfig.ukraineLat, appConfig.ukraineLng, GLOBE_RADIUS + 0.5);
+
+            if (!valenciaRingMesh) {
+                const valGroup = new THREE.Group();
+                valGroup.position.copy(valenciaVec3);
+                valGroup.lookAt(valenciaVec3.clone().multiplyScalar(2));
+
+                const dotGeo = new THREE.SphereGeometry(1.5, 16, 16);
+                const dotMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
+                valGroup.add(new THREE.Mesh(dotGeo, dotMat));
+
+                const glowSprite = new THREE.Sprite(new THREE.SpriteMaterial({
+                    map: particleGlowTexture,
+                    color: 0xfbbf24,
+                    transparent: true,
+                    opacity: 0.9,
+                    blending: THREE.AdditiveBlending
+                }));
+                glowSprite.scale.set(9, 9, 1);
+                valGroup.add(glowSprite);
+
+                const ringGeo = new THREE.RingGeometry(2.0, 3.3, 32);
+                const ringMat = new THREE.MeshBasicMaterial({
+                    color: 0xfde68a,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.9,
+                    blending: THREE.AdditiveBlending
+                });
+                valenciaRingMesh = new THREE.Mesh(ringGeo, ringMat);
+                valGroup.add(valenciaRingMesh);
+
+                earthGroup.add(valGroup);
+            }
+
+            ukraineMarkerGroup = new THREE.Group();
+            ukraineMarkerGroup.position.copy(ukraineVec3);
+            ukraineMarkerGroup.lookAt(ukraineVec3.clone().multiplyScalar(2));
+
+            const uDotGeo = new THREE.SphereGeometry(1.75, 16, 16);
+            const uDotMat = new THREE.MeshBasicMaterial({ color: 0xf472b6 });
+            ukraineMarkerGroup.add(new THREE.Mesh(uDotGeo, uDotMat));
+
+            const uGlowSprite = new THREE.Sprite(new THREE.SpriteMaterial({
+                map: particleGlowTexture,
+                color: 0xf472b6,
+                transparent: true,
+                opacity: 0.95,
+                blending: THREE.AdditiveBlending
+            }));
+            uGlowSprite.scale.set(11, 11, 1);
+            ukraineMarkerGroup.add(uGlowSprite);
+
+            const uRingGeo = new THREE.RingGeometry(2.4, 4.1, 32);
+            const uRingMat = new THREE.MeshBasicMaterial({
+                color: 0xfef08a,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.95,
+                blending: THREE.AdditiveBlending
+            });
+            ukraineRingMesh = new THREE.Mesh(uRingGeo, uRingMat);
+            ukraineMarkerGroup.add(ukraineRingMesh);
+
+            earthGroup.add(ukraineMarkerGroup);
+
+            routeArcGroup = new THREE.Group();
+
+            const midPoint = valenciaVec3.clone().add(ukraineVec3).multiplyScalar(0.5);
+            const distance = valenciaVec3.distanceTo(ukraineVec3);
+            midPoint.normalize().multiplyScalar(GLOBE_RADIUS + distance * 0.25);
+
+            activeBridgeCurve = new THREE.QuadraticBezierCurve3(valenciaVec3, midPoint, ukraineVec3);
+            const points = activeBridgeCurve.getPoints(72);
+            const arcGeo = new THREE.BufferGeometry().setFromPoints(points);
+
+            const solidMat = new THREE.LineBasicMaterial({
+                color: 0xfde68a,
+                transparent: true,
+                opacity: 0.52,
+                blending: THREE.AdditiveBlending
+            });
+            routeArcGroup.add(new THREE.Line(arcGeo, solidMat));
+
+            const streamCount = 6;
+            for (let i = 0; i < streamCount; i++) {
+                const spMat = new THREE.SpriteMaterial({
+                    map: particleGlowTexture,
+                    color: i % 2 === 0 ? 0xfef08a : 0xf472b6,
+                    transparent: true,
+                    opacity: 0.8,
+                    blending: THREE.AdditiveBlending
+                });
+                const sp = new THREE.Sprite(spMat);
+                sp.scale.set(3.5, 3.5, 1);
+                routeArcGroup.add(sp);
+                bridgeStreamParticles.push({
+                    sprite: sp,
+                    progress: i / streamCount
+                });
+            }
+
+            earthGroup.add(routeArcGroup);
+        }
+
+        let targetCamPos = null;
+        let targetLookAt = new THREE.Vector3(0, 0, 0);
+
+        function focusCameraOnEurope(instant = false) {
+            const isMobile = window.innerWidth < 640;
+            const centerLat = (VALENCIA_COORDS.lat + appConfig.ukraineLat) / 2 - (isMobile ? 9 : 3);
+            const centerLng = (VALENCIA_COORDS.lng + appConfig.ukraineLng) / 2;
+            const camDist = isMobile ? 250 : 214;
+
+            targetLookAt.set(0, isMobile ? -14 : -4, 0);
+
+            const desiredPos = latLngToVector3(centerLat, centerLng, camDist);
+            if (instant) {
+                camera.position.copy(desiredPos);
+                controls.target.copy(targetLookAt);
+                controls.update();
+            } else {
+                targetCamPos = desiredPos;
+            }
+        }
+
+        /* =====================================================================
+           4. ОТПРАВКА МЯГКОГО ЛУЧИКА ТЕПЛА И ВСПЛЫВАЮЩИХ СЕРДЕЧЕК
+           ===================================================================== */
+        function launchCosmicHug() {
+            playWarmSendShimmer();
+
+            if (navigator.vibrate) {
+                try { navigator.vibrate(25); } catch (e) {}
+            }
+
+            focusCameraOnEurope(false);
+
+            const startV = valenciaVec3.clone();
+            const endV = ukraineVec3.clone();
+            const dist = startV.distanceTo(endV);
+
+            const midV = startV.clone().add(endV).multiplyScalar(0.5);
+            const gentleOffset = new THREE.Vector3(
+                (Math.random() - 0.5) * 4,
+                (Math.random() - 0.5) * 4,
+                (Math.random() - 0.5) * 4
+            );
+            midV.add(gentleOffset).normalize().multiplyScalar(GLOBE_RADIUS + dist * (0.24 + Math.random() * 0.08));
+
+            const curve = new THREE.QuadraticBezierCurve3(startV, midV, endV);
+
+            const headGroup = new THREE.Group();
+            const headMat = new THREE.SpriteMaterial({
+                map: particleGlowTexture,
+                color: 0xffffff,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            const headSprite = new THREE.Sprite(headMat);
+            headSprite.scale.set(10.5, 10.5, 1);
+            headGroup.add(headSprite);
+
+            const trailSprites = [];
+            const trailCount = 26;
+            for (let i = 0; i < trailCount; i++) {
+                const tMat = new THREE.SpriteMaterial({
+                    map: particleGlowTexture,
+                    color: i % 2 === 0 ? 0xfef08a : 0xf472b6,
+                    transparent: true,
+                    opacity: Math.pow(1 - i / trailCount, 1.45) * 0.85,
+                    blending: THREE.AdditiveBlending
+                });
+                const sp = new THREE.Sprite(tMat);
+                const sz = (1 - i / trailCount) * 7.0;
+                sp.scale.set(sz, sz, 1);
+                sp.position.copy(startV);
+                earthGroup.add(sp);
+                trailSprites.push(sp);
+            }
+
+            earthGroup.add(headGroup);
+
+            spawnWarmRippleAt(startV, 0xfef08a);
+
+            activeWarmBeams.push({
+                curve,
+                t: 0,
+                speed: 0.0115,
+                head: headGroup,
+                trail: trailSprites,
+                history: []
+            });
+        }
+
+        function spawnWarmRippleAt(vec3Pos, hexColor) {
+            const ringGeo = new THREE.RingGeometry(1.2, 2.4, 36);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: hexColor,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            const mesh = new THREE.Mesh(ringGeo, ringMat);
+            mesh.position.copy(vec3Pos);
+            mesh.lookAt(vec3Pos.clone().multiplyScalar(2));
+            earthGroup.add(mesh);
+
+            activeWarmRipples.push({
+                mesh,
+                scale: 1,
+                alpha: 0.8
+            });
+        }
+
+        function spawnFloatingHeartsAtMomPin() {
+            const layer = document.getElementById('floatingHeartsLayer');
+            if (!layer) return;
+
+            const tempV = ukraineVec3.clone();
+            tempV.project(camera);
+            const screenX = (tempV.x * 0.5 + 0.5) * window.innerWidth;
+            const screenY = (-(tempV.y * 0.5) + 0.5) * window.innerHeight;
+
+            const symbols = ['💖', '❤️', '✨', '🌸', '👑'];
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const span = document.createElement('span');
+                    span.className = 'floating-heart';
+                    span.textContent = symbols[i % symbols.length];
+                    span.style.left = `${screenX}px`;
+                    span.style.top = `${screenY - 18}px`;
+                    span.style.setProperty('--tx', `${(Math.random() - 0.5) * 64}px`);
+                    layer.appendChild(span);
+                    setTimeout(() => span.remove(), 1900);
+                }, i * 110);
+            }
+        }
+
+        function onWarmBeamArrivedInUkraine() {
+            playWarmArrivalChord();
+
+            if (navigator.vibrate) {
+                try { navigator.vibrate([30, 50, 40]); } catch (e) {}
+            }
+
+            spawnWarmRippleAt(ukraineVec3, 0xfef08a);
+            setTimeout(() => spawnWarmRippleAt(ukraineVec3, 0xf472b6), 180);
+            spawnFloatingHeartsAtMomPin();
+
+            hugCount++;
+            localStorage.setItem('cosmic_mom_hugs', hugCount.toString());
+            const counterEl = document.getElementById('hugCounter');
+            counterEl.textContent = hugCount;
+            counterEl.classList.add('scale-125', 'text-pink-300');
+            setTimeout(() => counterEl.classList.remove('scale-125', 'text-pink-300'), 320);
+
+            const momPin = document.getElementById('momPinBox');
+            momPin.classList.add('scale-110');
+            setTimeout(() => momPin.classList.remove('scale-110'), 420);
+
+            const msgEl = document.getElementById('warmMessageText');
+            const badgeEl = document.getElementById('messageBadge');
+            const text = warmMessages[msgIndex % warmMessages.length];
+            msgIndex++;
+
+            badgeEl.textContent = `ЛУЧИК ТЕПЛА #${msgIndex} • СОГРЕВАЕТ ${appConfig.ukraineCity.toUpperCase()}`;
+            msgEl.classList.remove('animate-warm');
+            void msgEl.offsetWidth;
+            msgEl.textContent = text;
+            msgEl.classList.add('animate-warm');
+        }
+
+        /* =====================================================================
+           5. ПРОЕКЦИЯ 3D КООРДИНАТ НА ЭКРАН ДЛЯ HTML-МАРКЕРОВ
+           ===================================================================== */
+        function updateHTMLPinPosition(pinElementId, worldVec3) {
+            const el = document.getElementById(pinElementId);
+            if (!el) return;
+
+            const tempV = worldVec3.clone();
+            const camToPoint = tempV.clone().sub(camera.position).normalize();
+            const surfaceNormal = tempV.clone().normalize();
+            const dot = camToPoint.dot(surfaceNormal);
+
+            if (dot > 0.15) {
+                el.style.opacity = '0';
+                return;
+            }
+
+            tempV.project(camera);
+            const x = (tempV.x * 0.5 + 0.5) * window.innerWidth;
+            const y = (-(tempV.y * 0.5) + 0.5) * window.innerHeight;
+
+            el.style.opacity = '1';
+            el.style.transform = `translate(-50%, -100%) translate3d(${x}px, ${y}px, 0)`;
+        }
+
+        /* =====================================================================
+           6. ГЛАВНЫЙ ЦИКЛ АНИМАЦИИ
+           ===================================================================== */
+        let clock = new THREE.Clock();
+
+        function easeInOutCubic(x) {
+            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        }
+
+        function animateLoop() {
+            requestAnimationFrame(animateLoop);
+
+            const elapsed = clock.getElapsedTime();
+
+            if (targetCamPos) {
+                camera.position.lerp(targetCamPos, 0.05);
+                controls.target.lerp(targetLookAt, 0.05);
+                if (camera.position.distanceTo(targetCamPos) < 1.5) {
+                    targetCamPos = null;
+                }
+            }
+
+            controls.update();
+
+            if (cloudsMesh) {
+                cloudsMesh.rotation.y = elapsed * 0.01;
+            }
+            if (orbitalRingGroup) {
+                orbitalRingGroup.rotation.z = -Math.PI * 0.12 + elapsed * 0.02;
+            }
+
+            const pulseScale = 1 + Math.sin(elapsed * 2.6) * 0.22;
+            if (valenciaRingMesh) valenciaRingMesh.scale.set(pulseScale, pulseScale, 1);
+            if (ukraineRingMesh) ukraineRingMesh.scale.set(pulseScale, pulseScale, 1);
+
+            if (activeBridgeCurve && bridgeStreamParticles.length > 0) {
+                for (let i = 0; i < bridgeStreamParticles.length; i++) {
+                    const item = bridgeStreamParticles[i];
+                    item.progress = (item.progress + 0.0028) % 1;
+                    const pt = activeBridgeCurve.getPoint(item.progress);
+                    item.sprite.position.copy(pt);
+                }
+            }
+
+            for (let i = activeWarmBeams.length - 1; i >= 0; i--) {
+                const b = activeWarmBeams[i];
+                b.t += b.speed;
+
+                const easedT = easeInOutCubic(Math.min(b.t, 1));
+                const currentPos = b.curve.getPoint(easedT);
+                b.head.position.copy(currentPos);
+
+                b.history.unshift(currentPos.clone());
+                if (b.history.length > b.trail.length) b.history.pop();
+
+                for (let j = 0; j < b.trail.length; j++) {
+                    if (b.history[j]) {
+                        b.trail[j].position.copy(b.history[j]);
+                    }
+                }
+
+                if (b.t >= 1) {
+                    earthGroup.remove(b.head);
+                    b.trail.forEach(sp => earthGroup.remove(sp));
+                    activeWarmBeams.splice(i, 1);
+                    onWarmBeamArrivedInUkraine();
+                }
+            }
+
+            for (let i = activeWarmRipples.length - 1; i >= 0; i--) {
+                const rp = activeWarmRipples[i];
+                rp.scale += 0.12;
+                rp.alpha -= 0.016;
+                rp.mesh.scale.set(rp.scale, rp.scale, 1);
+                rp.mesh.material.opacity = Math.max(0, rp.alpha);
+
+                if (rp.alpha <= 0) {
+                    earthGroup.remove(rp.mesh);
+                    activeWarmRipples.splice(i, 1);
+                }
+            }
+
+            renderer.render(scene, camera);
+
+            updateHTMLPinPosition('pinValencia', valenciaVec3);
+            updateHTMLPinPosition('pinUkraine', ukraineVec3);
+        }
+
+        /* =====================================================================
+           7. МОДАЛЬНЫЕ ОКНА, КУПОНЫ И ГЕНЕРАТОР ССЫЛКИ
+           ===================================================================== */
+        function renderCoupons() {
+            const container = document.getElementById('couponsContainer');
+            container.innerHTML = '';
+
+            couponsData.forEach(c => {
+                const used = !!redeemedCoupons[c.id];
+                const div = document.createElement('div');
+                div.className = `relative rounded-2xl p-3.5 transition-all cursor-pointer ${
+                    used ? 'vip-coupon-active' : 'vip-coupon-card hover:brightness-110'
+                }`;
+                div.onclick = () => {
+                    redeemedCoupons[c.id] = !redeemedCoupons[c.id];
+                    localStorage.setItem('cosmic_mom_coupons', JSON.stringify(redeemedCoupons));
+                    if (redeemedCoupons[c.id]) playWarmArrivalChord();
+                    renderCoupons();
+                };
+
+                div.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-300/20 to-pink-500/20 border border-amber-200/30 flex items-center justify-center text-xl shrink-0 shadow-inner">
+                            ${c.icon}
+                        </div>
+                        <div class="flex-1 pr-20">
+                            <div class="text-xs sm:text-sm font-bold text-amber-50">${c.title}</div>
+                            <div class="text-[11px] text-amber-100/75 mt-0.5 leading-relaxed">${c.desc}</div>
+                        </div>
+                    </div>
+                    <div class="absolute top-3.5 right-3.5 px-2.5 py-0.5 rounded-full text-[9.5px] font-mono-tech font-bold uppercase tracking-wider ${
+                        used 
+                            ? 'bg-emerald-500/25 border border-emerald-300/60 text-emerald-200 shadow-[0_0_10px_rgba(52,211,153,0.3)]' 
+                            : 'bg-amber-400/20 border border-amber-300/50 text-amber-200'
+                    }">
+                        ${used ? 'Активирован ✓' : 'Активировать'}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function onCityPresetChange() {
+            const val = document.getElementById('selectUkraineCity').value;
+            const [cityName, latStr, lngStr] = val.split('|');
+            document.getElementById('inputCityName').value = cityName;
+            appConfig.ukraineCity = cityName;
+            appConfig.ukraineLat = parseFloat(latStr);
+            appConfig.ukraineLng = parseFloat(lngStr);
+
+            updateUIWithConfig();
+            buildLocationsAndArc();
+        }
+
+        function saveSettingsAndCopyLink() {
+            appConfig.ukraineCity = document.getElementById('inputCityName').value.trim() || "Украина";
+            appConfig.sonName = document.getElementById('inputSonName').value.trim() || "Максим";
+            appConfig.letter = document.getElementById('inputLetter').value.trim() || appConfig.letter;
+
+            updateUIWithConfig();
+            buildLocationsAndArc();
+            focusCameraOnEurope(false);
+
+            const params = new URLSearchParams();
+            params.set('city', appConfig.ukraineCity);
+            params.set('lat', appConfig.ukraineLat.toString());
+            params.set('lng', appConfig.ukraineLng.toString());
+            params.set('name', appConfig.sonName);
+            params.set('gift', '1');
+
+            const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+            window.history.replaceState({}, '', shareUrl);
+
+            const linkBox = document.getElementById('generatedLinkBox');
+            const linkInput = document.getElementById('generatedUrlInput');
+            if (linkBox && linkInput) {
+                linkBox.classList.remove('hidden');
+                linkInput.value = shareUrl;
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).catch(() => {});
+            } else {
+                const temp = document.createElement('textarea');
+                temp.value = shareUrl;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+            }
+
+            const btnText = document.getElementById('copyLinkBtnText');
+            btnText.textContent = 'Ссылка скопирована! Отправь её Маме ✓';
+            setTimeout(() => {
+                btnText.textContent = 'Сохранить и скопировать ссылку для Мамы';
+                closeModal('settingsModal');
+                launchCosmicHug();
+            }, 1300);
+        }
+
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (id === 'couponsModal') renderCoupons();
+            el.classList.remove('hidden');
+            el.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }
+
+        window.addEventListener('resize', () => {
+            if (!camera || !renderer) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            focusCameraOnEurope(false);
+        });
+
+        window.onload = function () {
+            loadConfigFromURL();
+            initThreeGlobe();
+            animateLoop();
+
+            setTimeout(() => {
+                launchCosmicHug();
+            }, 900);
+        };
+    </script>
+</body>
+</html>
